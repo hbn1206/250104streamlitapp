@@ -141,19 +141,19 @@ draw_circular_permutation_examples(n_value, max_examples=4)
 st.markdown("---")
 
 # --------------------------------------------------------
-# (B) 중복순열(Permutation with Repetition) 설명
+# (B) 같은 것이 있는 순열 설명
 # --------------------------------------------------------
-st.markdown("### :round_pushpin: 중복순열 (Permutation with Repetition) :rainbow:")
+st.markdown("### :round_pushpin: 같은 것이 있는 순열 :rainbow:")
 st.write(
     r"""
-    - **중복순열**은 동일한 원소가 여러 번 나타날 수 있는 순열이에요.
+    - **같은 것이 있는 순열**은 동일한 원소가 여러 번 나타날 수 있는 순열이에요.
     - 예를 들어, \(\{1, 2, 2, 3\}\)과 같이 같은 숫자(2)가 여러 번 등장해도 순열을 계산할 수 있어요.
-    - 중복순열의 개수를 구하는 대표적인 공식 중 하나는 다음과 같아요:
+    - 같은 것이 있는 순열의 개수를 구하는 대표적인 공식 중 하나는 다음과 같아요:
     """
 )
 st.latex(
     r"""
-    \text{중복순열의 개수} = \frac{n!}{n_1! \times n_2! \times \cdots \times n_k!}
+    \text{같은 것이 있는 순열의 개수} = \frac{n!}{n_1! \times n_2! \times \cdots \times n_k!}
     """
 )
 st.write(
@@ -163,8 +163,8 @@ st.write(
     """
 )
 
-# 중복순열 계산 예시
-st.markdown("#### 중복순열 예시 계산해보기 :heart_decoration:")
+# 같은 것이 있는 순열 계산 예시
+st.markdown("#### 같은 것이 있는 순열 예시 계산해보기 :heart_decoration:")
 st.write("서로 다른 원소의 종류(k)와, 각 원소가 몇 개씩 있는지 입력해 보세요!")
 
 k = st.number_input("원소 종류의 개수(k)", min_value=1, value=3, step=1)
@@ -181,7 +181,7 @@ for i in range(k):
         )
     )
 
-if st.button("중복순열 계산하기"):
+if st.button("같은 것이 있는 순열 계산하기"):
     # 총 개수
     n_total = sum(counts)
     
@@ -193,16 +193,16 @@ if st.button("중복순열 계산하기"):
     # 결과
     result = math.factorial(n_total) // denominator
     st.write(f"총 원소의 개수 n = {n_total} 이고,")
-    st.write(f"중복순열의 개수는 **{result}** 가지입니다 :star2:")
+    st.write(f"같은 것이 있는 순열의 개수는 **{result}** 가지입니다 :star2:")
 
-    # (추가) 가능한 중복순열을 전부 출력
+    # (추가) 가능한 같은 것이 있는 순열을 전부 출력
     import itertools
     elements = []
     for i, c in enumerate(counts):
         elements.extend([chr(65 + i)] * c)  # A부터 시작
     perm_set = set(itertools.permutations(elements, n_total))
     perm_list = sorted("".join(p) for p in perm_set)
-    st.write("**가능한 중복순열(사전순):**")
+    st.write("**가능한 같은 것이 있는 순열(사전순):**")
     st.write(", ".join(perm_list))
 
 # 구분선
@@ -213,10 +213,10 @@ st.markdown("---")
 # --------------------------------------------------------
 st.write(
     """
-    오늘은 확률과 통계에서 자주 등장하는 **원순열**과 **중복순열**에 대해 알아봤어요.  
+    오늘은 확률과 통계에서 자주 등장하는 **원순열**과 **같은 것이 있는 순열**에 대해 알아봤어요.  
     특히 원순열은 회전을 같은 경우로 취급한다는 점이 핵심이에요.  
     예시로 보인 4가지 그림은 '서로 다른 일반 순열'을 그린 것이니 참고하세요.  
-    중복순열 계산 결과와 실제 가능한 순열 목록도 꼭 확인해 보세요.  
+    같은 것이 있는 순열 계산 결과와 실제 가능한 순열 목록도 꼭 확인해 보세요.  
     다음 시간에도 재미있는 이론과 예제로 돌아올게요! :sparkling_heart:
     """
 )
