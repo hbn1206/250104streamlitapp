@@ -15,7 +15,7 @@ st.set_page_config(
 
 # --------------------------------------------------------
 # (1) 원형으로 순열을 시각화하는 함수
-#     - 크기를 이전 예시보다 더 작게 조정
+#     - 좌표 축 범위를 여유롭게 설정
 # --------------------------------------------------------
 def draw_single_permutation(ax, permutation):
     """
@@ -35,46 +35,47 @@ def draw_single_permutation(ax, permutation):
         ax.plot([x[curr_idx], x[next_idx]], [y[curr_idx], y[next_idx]], 'k-', alpha=0.5)
 
     # 점 그리기
-    ax.scatter(x, y, s=120, c='pink', alpha=0.7, edgecolors='red', linewidths=1)
+    ax.scatter(x, y, s=200, c='pink', alpha=0.7, edgecolors='red', linewidths=1)
 
-    # 라벨: 여기서는 편의상 permutation[i] + 1 형태로 표시
+    # 라벨: 여기서는 permutation[i] + 1 형태로 표시
     for i in range(n):
-        label = str(i+1)
+        label = str(i + 1)
         ax.text(x[i], y[i],
                 label,
                 ha='center', va='center',
-                fontsize=8, fontweight='bold')
+                fontsize=10, fontweight='bold')
     
     # 좌표축 등 숨기기
     ax.set_aspect('equal', 'box')
     ax.axis('off')
 
+    # 필요하다면 축 범위 살짝 넓게 잡아서 원이 안 잘리도록
+    ax.set_xlim(-1.2, 1.2)
+    ax.set_ylim(-1.2, 1.2)
+
 
 # --------------------------------------------------------
 # (2) 최대 4개까지만 순열을 그려주는 함수
-#     - figsize를 더 줄여서 화면에 잘리지 않도록
+#     - figsize 크기를 키우고, fig.tight_layout() 사용
 # --------------------------------------------------------
 def draw_circular_permutation_examples(n, max_examples=4):
     """
     n개의 원소에 대한 '모든 일반 순열' 중 최대 4개만 골라
     원형 배치로 시각화 (subplot) 해서 보여줍니다.
     """
-    # n개의 원소라면 일반 순열은 n! 가지
     all_perms = list(itertools.permutations(range(n)))
-    
-    # 최대 4개만 선택
-    selected_perms = all_perms[:max_examples]
+    selected_perms = all_perms[:max_examples]  # 최대 4개만
 
-    # subplot 행/열 설정 (여기서는 2x2까지 고려)
     num_examples = len(selected_perms)
     if num_examples == 1:
-        # (1, 1)짜리
-        fig, ax = plt.subplots(1, 1, figsize=(1.5, 1.5))
+        fig, ax = plt.subplots(1, 1, figsize=(3, 3))
         draw_single_permutation(ax, selected_perms[0])
+        fig.tight_layout()
+        st.pyplot(fig)
     else:
         rows = 2 if num_examples > 2 else 1
         cols = 2 if num_examples > 2 else num_examples
-        fig, axs = plt.subplots(rows, cols, figsize=(1.5*cols, 1.5*rows))
+        fig, axs = plt.subplots(rows, cols, figsize=(3*cols, 3*rows))
         axs = axs.flatten() if num_examples > 1 else [axs]
         for i in range(num_examples):
             draw_single_permutation(axs[i], selected_perms[i])
@@ -82,7 +83,8 @@ def draw_circular_permutation_examples(n, max_examples=4):
         for i in range(num_examples, len(axs)):
             axs[i].axis('off')
 
-    st.pyplot(fig)
+        fig.tight_layout()
+        st.pyplot(fig)
 
 
 # --------------------------------------------------------
@@ -125,7 +127,6 @@ n_value = st.number_input("원소의 개수 n을 입력하세요", min_value=1, 
 if n_value == 1:
     st.write("원소가 1개면, 원순열은 1가지밖에 없어요 :wink:")
 else:
-    # 원순열 개수
     circular_permutation = math.factorial(n_value - 1)
     st.write(
         f"원소가 {n_value}개라면, 원순열의 개수는 "
@@ -194,25 +195,13 @@ if st.button("중복순열 계산하기"):
     st.write(f"총 원소의 개수 n = {n_total} 이고,")
     st.write(f"중복순열의 개수는 **{result}** 가지입니다 :star2:")
 
-    # ---------------------------
-    # (추가) 실제 가능한 중복순열을 모두 생성하여 보여주기
-    # ---------------------------
-    # 예) k=3, counts=[2,1,1] 이라면,
-    #     elements = ['A','A','B','C'] -> 모든 순열 -> 중복 제거 -> 정렬 출력
-
+    # (추가) 가능한 중복순열을 전부 출력
     import itertools
-
-    # 알파벳 리스트 만들기
     elements = []
     for i, c in enumerate(counts):
-        elements.extend([chr(65 + i)] * c)  # A=65, B=66, ...
-
-    # 모든 순열을 구하고, set으로 중복 제거
+        elements.extend([chr(65 + i)] * c)  # A부터 시작
     perm_set = set(itertools.permutations(elements, n_total))
-
-    # 정렬 (사전순)
     perm_list = sorted("".join(p) for p in perm_set)
-
     st.write("**가능한 중복순열(사전순):**")
     st.write(", ".join(perm_list))
 
