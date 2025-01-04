@@ -15,8 +15,7 @@ st.set_page_config(
 
 # --------------------------------------------------------
 # (1) 원형으로 순열을 시각화하는 함수
-#     - 크기를 이전 예시보다 30% 정도 작게 설정
-#     - ax (subplot) 위에 그림을 그립니다.
+#     - 크기를 이전 예시보다 더 작게 조정
 # --------------------------------------------------------
 def draw_single_permutation(ax, permutation):
     """
@@ -36,7 +35,7 @@ def draw_single_permutation(ax, permutation):
         ax.plot([x[curr_idx], x[next_idx]], [y[curr_idx], y[next_idx]], 'k-', alpha=0.5)
 
     # 점 그리기
-    ax.scatter(x, y, s=200, c='pink', alpha=0.7, edgecolors='red', linewidths=1)
+    ax.scatter(x, y, s=120, c='pink', alpha=0.7, edgecolors='red', linewidths=1)
 
     # 라벨: 여기서는 편의상 permutation[i] + 1 형태로 표시
     for i in range(n):
@@ -44,7 +43,7 @@ def draw_single_permutation(ax, permutation):
         ax.text(x[i], y[i],
                 label,
                 ha='center', va='center',
-                fontsize=10, fontweight='bold')
+                fontsize=8, fontweight='bold')
     
     # 좌표축 등 숨기기
     ax.set_aspect('equal', 'box')
@@ -53,6 +52,7 @@ def draw_single_permutation(ax, permutation):
 
 # --------------------------------------------------------
 # (2) 최대 4개까지만 순열을 그려주는 함수
+#     - figsize를 더 줄여서 화면에 잘리지 않도록
 # --------------------------------------------------------
 def draw_circular_permutation_examples(n, max_examples=4):
     """
@@ -67,18 +67,18 @@ def draw_circular_permutation_examples(n, max_examples=4):
 
     # subplot 행/열 설정 (여기서는 2x2까지 고려)
     num_examples = len(selected_perms)
-    # 예: 4개면 2행 2열, 3개면 1행 3열, 2개면 1행 2열, 1개면 1행 1열
     if num_examples == 1:
-        fig, ax = plt.subplots(1, 1, figsize=(2.2, 2.2))
+        # (1, 1)짜리
+        fig, ax = plt.subplots(1, 1, figsize=(1.5, 1.5))
         draw_single_permutation(ax, selected_perms[0])
     else:
         rows = 2 if num_examples > 2 else 1
         cols = 2 if num_examples > 2 else num_examples
-        fig, axs = plt.subplots(rows, cols, figsize=(2.2*cols, 2.2*rows))
-        axs = axs.flatten() if num_examples > 1 else [axs]  # 배열 형태로 맞추기
+        fig, axs = plt.subplots(rows, cols, figsize=(1.5*cols, 1.5*rows))
+        axs = axs.flatten() if num_examples > 1 else [axs]
         for i in range(num_examples):
             draw_single_permutation(axs[i], selected_perms[i])
-        # 사용하지 않는 subplot(예: 2x2에서 3개만 그리는 경우) 숨기기
+        # 사용하지 않는 subplot 숨기기
         for i in range(num_examples, len(axs)):
             axs[i].axis('off')
 
@@ -168,8 +168,6 @@ st.write("서로 다른 원소의 종류(k)와, 각 원소가 몇 개씩 있는�
 
 k = st.number_input("원소 종류의 개수(k)", min_value=1, value=3, step=1)
 
-import math
-
 counts = []
 for i in range(k):
     counts.append(
@@ -196,6 +194,28 @@ if st.button("중복순열 계산하기"):
     st.write(f"총 원소의 개수 n = {n_total} 이고,")
     st.write(f"중복순열의 개수는 **{result}** 가지입니다 :star2:")
 
+    # ---------------------------
+    # (추가) 실제 가능한 중복순열을 모두 생성하여 보여주기
+    # ---------------------------
+    # 예) k=3, counts=[2,1,1] 이라면,
+    #     elements = ['A','A','B','C'] -> 모든 순열 -> 중복 제거 -> 정렬 출력
+
+    import itertools
+
+    # 알파벳 리스트 만들기
+    elements = []
+    for i, c in enumerate(counts):
+        elements.extend([chr(65 + i)] * c)  # A=65, B=66, ...
+
+    # 모든 순열을 구하고, set으로 중복 제거
+    perm_set = set(itertools.permutations(elements, n_total))
+
+    # 정렬 (사전순)
+    perm_list = sorted("".join(p) for p in perm_set)
+
+    st.write("**가능한 중복순열(사전순):**")
+    st.write(", ".join(perm_list))
+
 # 구분선
 st.markdown("---")
 
@@ -207,6 +227,7 @@ st.write(
     오늘은 확률과 통계에서 자주 등장하는 **원순열**과 **중복순열**에 대해 알아봤어요.  
     특히 원순열은 회전을 같은 경우로 취급한다는 점이 핵심이에요.  
     예시로 보인 4가지 그림은 '서로 다른 일반 순열'을 그린 것이니 참고하세요.  
+    중복순열 계산 결과와 실제 가능한 순열 목록도 꼭 확인해 보세요.  
     다음 시간에도 재미있는 이론과 예제로 돌아올게요! :sparkling_heart:
     """
 )
