@@ -153,7 +153,10 @@ st.write(
 st.latex(
     r"""
     \text{중복순열의 개수} = \frac{n!}{n_1! \times n_2! \times \cdots \times n_k!}
-
+    """
+)
+st.write(
+    r"""
     여기서 \(n = n_1 + n_2 + \dots + n_k\) 이고, 
     각 \(n_i\)는 동일한 원소가 몇 개씩 있는지 나타내요.
     """
