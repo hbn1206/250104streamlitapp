@@ -35,4 +35,12 @@ if st.button("랜덤 모둠 배치하기"):
     
     for t in range(team_count):
         # 이 팀에 들어갈 사람 수
-        team_size = base_size + (1
+        team_size = base_size + (1 if t < remainder else 0)
+        team_members = letters[start_index:start_index + team_size]
+        start_index += team_size
+        teams.append(team_members)
+
+    # 5) 결과 출력
+    st.write(f"**총 {people_count}명**을 **{team_count}개** 모둠으로 랜덤 배정:")
+    for i, team in enumerate(teams, start=1):
+        st.write(f"- 모둠 {i} ({len(team)}명): {', '.join(team)}")
