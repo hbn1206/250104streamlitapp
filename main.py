@@ -8,7 +8,7 @@ import numpy as np
 # 스트림릿 페이지 기본 설정
 # --------------------------------------------------------
 st.set_page_config(
-    page_title="확률과 통계 수업 - 원순열과 중복순열", 
+    page_title="확률과 통계 수업 - 원순열과 같은 것이 있는 순열", 
     page_icon=":two_hearts:",
     layout="centered"
 )
